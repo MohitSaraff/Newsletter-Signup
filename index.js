@@ -1,21 +1,25 @@
 import express from "express";
 import bodyParser from "body-parser";
 import https from "https";
-import * as dotenv from 'dotenv'
-dotenv.config()
-
 import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import * as path from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+import {dirname, join} from 'path';
+import * as dotenv from 'dotenv'
+// Cofigure keys from .env file so that they can be accessed by process.env
+dotenv.config()
 
 const port = 3000;
 const app = express();
 
+// Setting __dirname due to new ES Module importing
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Setting up the static files in public directory so that they can be accessed in vercel deployment
+
+app.use("/", express.static(join(__dirname + '/public')));
+
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use("/", express.static(path.join(__dirname + '/public')));
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/signup.html");
@@ -44,7 +48,7 @@ app.post("/", (req, res) => {
     const url = `https://us9.api.mailchimp.com/3.0/lists/${listID}`;
     const options = {
         method: "POST",
-        auth: `mohit1:${process.env.API_KEY}`,
+        auth: `mohit1:${process.env.API_KEY}`, // API Key saved in .env file
     };
     const request = https.request(url, options, (response) => {
         if (response.statusCode === 200) {
