@@ -6,6 +6,7 @@ dotenv.config()
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import * as path from 'path';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -14,7 +15,7 @@ const port = 3000;
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use("/", express.static(path.join(__dirname + '/public')));
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/signup.html");
