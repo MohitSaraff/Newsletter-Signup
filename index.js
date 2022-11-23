@@ -1,6 +1,8 @@
 import express from "express";
 import bodyParser from "body-parser";
 import https from "https";
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -38,11 +40,10 @@ app.post("/", (req, res) => {
 
     const jsonData = JSON.stringify(data);
     const listID = "fc32b02294";
-    const apiKey = "7c47d451300fc0a76be853d4c9459966-us9";
     const url = `https://us9.api.mailchimp.com/3.0/lists/${listID}`;
     const options = {
         method: "POST",
-        auth: `mohit1:${apiKey}`,
+        auth: `mohit1:${process.env.API_KEY}`,
     };
     const request = https.request(url, options, (response) => {
         if (response.statusCode === 200) {
